@@ -13,8 +13,10 @@
 {
   CGFloat                    squareSize;
   CGFloat                    rotation;
+  CGFloat                    then;
   CGColorRef                 aColor;
   BOOL                       twoFingers;
+  BOOL                       newTouch;
   
   IBOutlet UILabel           *xField;
   IBOutlet UILabel           *yField;

@@ -7,6 +7,7 @@
 //
 
 #import "MyCustomView.h"
+#include <math.h>
 
 #define kAccelerometerFrequency        10 //Hz
 
@@ -68,9 +69,15 @@
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
+  newTouch = TRUE;
+  
   if([touches count] > 1)
   {
     twoFingers = YES;
+  }
+  else
+  {
+    twoFingers = NO;
   }
   
   // tell the view to redraw
@@ -80,21 +87,28 @@
 
 - (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
-  // update rotate
-  UITouch *first = (UITouch*)[[touches allObjects] objectAtIndex:0];
-  
-  CGPoint now = [first locationInView:[first view]];
-  CGPoint then = [first previousLocationInView:[first view]];
-  
-  CGFloat dy = now.y - then.y;
-  
-  if(dy >= 0.0f)
+  if(twoFingers && [touches count] == 2)
   {
-    rotation += 0.1f;   
-  }
-  else
-  {
-    rotation -= 0.1f;
+    UITouch *first = (UITouch*)[[touches allObjects] objectAtIndex:0];
+    UITouch *second = (UITouch*)[[touches allObjects] objectAtIndex:1];
+
+    // update rotate
+    CGPoint loc1 = [first locationInView:[first view]];
+    CGPoint loc2 = [second locationInView:[first view]];
+
+    CGFloat dx = loc1.x - loc2.x;
+    CGFloat dy = loc1.y - loc2.y;
+    
+    CGFloat now = atan2f(dy, dx);
+    CGFloat delta = now - then;
+
+    if(!newTouch)
+    {
+      rotation += delta;      
+    }
+    
+    then = now;
+    if(newTouch) newTouch = NO;
   }
   
   // tell the view to redraw
