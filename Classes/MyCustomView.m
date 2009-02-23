@@ -66,10 +66,8 @@
 }
 
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event 
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
-  NSLog(@"touches began count %d, %@", [touches count], touches);
-  
   if([touches count] > 1)
   {
     twoFingers = YES;
@@ -82,10 +80,22 @@
 
 - (void) touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
-  NSLog(@"touches moved count %d, %@", [touches count], touches);
-  
   // update rotate
-  rotation += 0.1f;
+  UITouch *first = (UITouch*)[[touches allObjects] objectAtIndex:0];
+  
+  CGPoint now = [first locationInView:[first view]];
+  CGPoint then = [first previousLocationInView:[first view]];
+  
+  CGFloat dy = now.y - then.y;
+  
+  if(dy >= 0.0f)
+  {
+    rotation += 0.1f;   
+  }
+  else
+  {
+    rotation -= 0.1f;
+  }
   
   // tell the view to redraw
   [self setNeedsDisplay];
@@ -94,8 +104,6 @@
 
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-  NSLog(@"touches moved count %d, %@", [touches count], touches);
-  
   // reset the var
   twoFingers = NO;
   
