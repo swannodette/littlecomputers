@@ -3,7 +3,7 @@
 // your project target (get info on your project target to find it)
 // Thanks to Martin Ceperly.
 
-#define ZLIB_SUPPORT
+//#define ZLIB_SUPPORT // don't uncomment this until you add the -lz linker flag to your project target
 
 #ifdef ZLIB_SUPPORT
 #import "zlib.h"
