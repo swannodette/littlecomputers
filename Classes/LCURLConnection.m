@@ -19,6 +19,28 @@
 - (void) dataRequest:(NSString*)urlString;
 @end
 
+@implementation NSDictionary ( NSDictionary_URLHelpers )
+
+- (NSString*) toURLParameters
+{
+  NSMutableString *result = [[[NSMutableString alloc] init] autorelease];
+  NSArray *keys = [self allKeys];
+  NSInteger count = [keys count];
+  for(int i = 0; i < count; i++)
+  {
+    NSString *key = [keys objectAtIndex:i];
+    id value = [self objectForKey:key];
+    [result appendFormat:@"%@=%@", key, value];
+    if(i < count-1)
+    {
+      [result appendString:@"&"];
+    }
+  }
+  return result;
+}
+
+@end
+
 @implementation LCURLConnection (private)
 - (void) dataRequest:(NSString*)urlString
 {
