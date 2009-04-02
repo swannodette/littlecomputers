@@ -80,7 +80,7 @@
 
   if([requester respondsToSelector:@selector(queueDidLoadImage:)])
   {
-    [requester performSelector:@selector(queueDidLoadImage:) withObject:self withObject:theImage];
+    [requester performSelector:@selector(queueDidLoadImage:) withObject:theImage];
   }
 
   [queue removeObjectAtIndex:0]; 
