@@ -87,7 +87,6 @@
   [connection release];
   
   isDownloading = NO;
-  
   if([queue count] > 0)
   {
     [self downloadNextImageInQueue];
@@ -101,13 +100,13 @@
   id requester = [request objectForKey:@"requester"];
   NSString *url = [request objectForKey:@"url"];
   
+  if([requester respondsToSelector:@selector(queueDidFailToLoadImage:withError:)])
+  {
+    [requester performSelector:@selector(queueDidFailToLoadImage:withError:) withObject:url withObject:error];
+  }
+  
   [queue removeObjectAtIndex:0];
   [connection release];
-  
-  if([requester respondsToSelector:@selector(queue:didFailWithError:)])
-  {
-    [requester performSelector:@selector(queue:didFailWithError:) withObject:url withObject:error];
-  }
   
   isDownloading = NO;
   [self downloadNextImageInQueue];
