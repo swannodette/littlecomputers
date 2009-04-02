@@ -12,15 +12,18 @@
 
 @class LCURLConnection;
 
+
 @protocol LCURLConnectionDelegate <NSObject>
 @required
 - (void) connectionDidFinishLoading:(LCURLConnection*)connection;
 - (void) connection:(LCURLConnection*)connection didFailWithError:(NSError*)error;
 @end
 
+
 @interface NSDictionary ( NSDictionary_URLHelpers )
 - (NSString*) toURLParameters;
 @end
+
 
 @interface LCURLConnection : NSObject 
 {

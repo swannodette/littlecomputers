@@ -13,11 +13,7 @@
 #endif
 
 #pragma mark -
-#pragma mark Private Methods
-
-@interface LCURLConnection (private)
-- (void) dataRequest:(NSString*)urlString;
-@end
+#pragma mark NSDictionary URLHelpers Category
 
 @implementation NSDictionary ( NSDictionary_URLHelpers )
 
@@ -41,12 +37,17 @@
 
 @end
 
+#pragma mark -
+#pragma mark Private Methods
+
+@interface LCURLConnection (private)
+- (void) dataRequest:(NSString*)urlString;
+@end
+
 @implementation LCURLConnection (private)
+
 - (void) dataRequest:(NSString*)urlString
 {
-  // TODO: First check if we have a network connection! - David
-  
-  // create the request
   NSString *encodedURLString = [urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
   
   NSURL *encodedURL = [NSURL URLWithString:encodedURLString];
@@ -54,11 +55,6 @@
                                               cachePolicy:NSURLRequestUseProtocolCachePolicy
                                           timeoutInterval:60.0];
   
-  // TODO: temporary, for https connection to mobilekwan - David
-  [NSURLRequest setAllowsAnyHTTPSCertificate:YES forHost:[encodedURL host]];
-  
-  // create the connection with the request
-  // and start loading the data
   NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
   
   if(theConnection) 
@@ -76,6 +72,7 @@
     [self connection:nil didFailWithError:[NSError errorWithDomain:@"LCURLConnection" code:1 userInfo:dict]];
   }
 }
+
 @end
 
 #pragma mark -
