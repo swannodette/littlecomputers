@@ -1,6 +1,8 @@
 #import "LCFileHelpers.h"
 
+#ifdef ZLIB_SUPPORT
 #define CHUNK_SIZE 256000 // 256K buffer in memory
+#endif
 
 @implementation LCFileHelpers
 
