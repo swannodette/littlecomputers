@@ -1,4 +1,4 @@
-// if you want zip suport you need to uncomment the ZLIB_SUPPORT define
+// if you want gzip/zip suport you need to uncomment the ZLIB_SUPPORT define
 // and make sure to add -lz to the Other Linker Flags in the build tab
 // your project target (get info on your project target to find it)
 // Thanks to Martin Ceperly.
