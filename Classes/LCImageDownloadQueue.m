@@ -19,7 +19,6 @@
   
   if(!sharedQueue)
   {
-    // first check if the user is loaded
     sharedQueue = [[LCImageDownloadQueue alloc] init];
   }
   
@@ -46,8 +45,6 @@
 
 - (void) queueImage:(NSString*)imageURL forRequester:(id)requester
 {
-  NSLog(@"queueImage %@", imageURL);
-  // add this request to the queue
   [queue addObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:imageURL, requester, nil]
                                                forKeys:[NSArray arrayWithObjects:@"url", @"requester", nil]]];
   [self downloadNextImageInQueue];
@@ -77,6 +74,8 @@
   id requester = [downloadRequest objectForKey:@"requester"];
 
   UIImage *theImage = [connection image];
+  
+  NSLog(@"connection did finish loading %@", connection);
 
   if([requester respondsToSelector:@selector(queueDidLoadImage:)])
   {
