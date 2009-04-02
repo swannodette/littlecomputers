@@ -110,27 +110,29 @@
 }
 
 
-- (void) connection:(NSURLConnection *)connection
-   didFailWithError:(NSError *)error
+- (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
+  [connection release];
+  
   if([self.delegate respondsToSelector:@selector(connection:didFailWithError:)])
   {
-    [self.delegate performSelector:@selector(connectionDidFinishLoading:) withObject:self withObject:error];
+    [self.delegate performSelector:@selector(connection:didFailWithError:) withObject:self withObject:error];
   }
-  
-  [connection release];
+
   [receivedData release];
 }
 
 
 - (void) connectionDidFinishLoading:(NSURLConnection *)connection
 {
+  [connection release];
+  
   if([self.delegate respondsToSelector:@selector(connectionDidFinishLoading:)])
   {
     [self.delegate performSelector:@selector(connectionDidFinishLoading:) withObject:self];
   }
   
-  [connection release];
+  [receivedData release];
 }
 
 #pragma mark Data Accessors
