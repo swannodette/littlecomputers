@@ -18,6 +18,10 @@
 - (void) connection:(LCURLConnection*)connection didFailWithError:(NSError*)error;
 @end
 
+@interface NSDictionary ( NSDictionary_URLHelpers )
+- (NSString*) toURLParameters;
+@end
+
 @interface LCURLConnection : NSObject 
 {
   id                  delegate;           // store a reference to the delegate
