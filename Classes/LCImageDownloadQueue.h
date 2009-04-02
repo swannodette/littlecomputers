@@ -5,7 +5,7 @@
 
 @protocol LCImageDownloadQueueRequester <NSObject>
 @required
-- (void) queuedidLoadImage:(UIImage*)image;
+- (void) queueDidLoadImage:(UIImage*)image;
 - (void) queueDidFailToLoadImage:(NSString*)imageUrl withError:(NSError*)error;
 @end
 

@@ -118,8 +118,6 @@
   {
     [self.delegate performSelector:@selector(connection:didFailWithError:) withObject:self withObject:error];
   }
-
-  [receivedData release];
 }
 
 
@@ -131,8 +129,6 @@
   {
     [self.delegate performSelector:@selector(connectionDidFinishLoading:) withObject:self];
   }
-  
-  [receivedData release];
 }
 
 #pragma mark Data Accessors

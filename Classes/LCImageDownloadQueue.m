@@ -67,7 +67,6 @@
 - (void) downloadImage:(NSString*)imageURL
 {
   isDownloading = YES;
-  // create a request!
   [[LCURLConnection alloc] initWithURL:imageURL delegate:self];
 }
 
@@ -77,23 +76,18 @@
   NSDictionary *downloadRequest = [queue objectAtIndex:0];
   id requester = [downloadRequest objectForKey:@"requester"];
 
-  // get the image instance and return it
   UIImage *theImage = [connection image];
 
-  // inform the requester
   if([requester respondsToSelector:@selector(queueDidLoadImage:)])
   {
     [requester performSelector:@selector(queueDidLoadImage:) withObject:self withObject:theImage];
   }
 
-  // remove this request from the queue
   [queue removeObjectAtIndex:0]; 
-  // release the connection
   [connection release];
   
   isDownloading = NO;
   
-  // download the next one
   if([queue count] > 0)
   {
     [self downloadNextImageInQueue];
@@ -103,26 +97,19 @@
 
 - (void) connection:(LCURLConnection*)connection didFailWithError:(NSError*)error
 {
-  // return an error image
-  NSLog(@"Image download error!, %@", error);
-  
   NSDictionary *request = [queue objectAtIndex:0];
   id requester = [request objectForKey:@"requester"];
   NSString *url = [request objectForKey:@"url"];
   
-  // dequeue the request
   [queue removeObjectAtIndex:0];
   [connection release];
   
-  // pass the error image
   if([requester respondsToSelector:@selector(queue:didFailWithError:)])
   {
     [requester performSelector:@selector(queue:didFailWithError:) withObject:url withObject:error];
   }
   
   isDownloading = NO;
-  
-  // get the next one
   [self downloadNextImageInQueue];
 }
 
