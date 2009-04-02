@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#define JSON_SUPPORT // uncomment if you've included the JSON.framework to your project
+//#define JSON_SUPPORT // uncomment if you've included the JSON.framework to your project
 
 @class LCURLConnection;
 
