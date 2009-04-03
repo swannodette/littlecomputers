@@ -75,8 +75,6 @@
 
   UIImage *theImage = [connection image];
   
-  NSLog(@"connection did finish loading %@", connection);
-
   if([requester respondsToSelector:@selector(queueDidLoadImage:)])
   {
     [requester performSelector:@selector(queueDidLoadImage:) withObject:theImage];
