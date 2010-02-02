@@ -74,10 +74,7 @@
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
   NSString *rootPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   path = [rootPath stringByAppendingPathComponent:fileName];
-  // on the iPhone because of security restrictions you cannot write to the normal
-  // resource path. so we first check if the file exists in the Documents directory
-  // and if it doesn't it's the first time we've loaded the file, get it from the
-  // bundle resource path instead
+  // SEE NSDictionary +read
   if (![[NSFileManager defaultManager] fileExistsAtPath:path]) 
   {
     path = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
