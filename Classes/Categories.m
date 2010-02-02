@@ -9,6 +9,14 @@
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
   NSString *rootPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   path = [rootPath stringByAppendingPathComponent:fileName];
+  // on the iPhone because of security restrictions you cannot write to the normal
+  // resource path. so we first check if the file exists in the Documents directory
+  // and if it doesn't it's the first time we've loaded the file, get it from the
+  // bundle resource path instead
+  if (![[NSFileManager defaultManager] fileExistsAtPath:path]) 
+  {
+    path = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
+  }
 #else
   path = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
 #endif
@@ -23,17 +31,17 @@
   }
 }
 
-+ (BOOL) write:(NSString*)name
+- (BOOL) write:(NSString*)name
 {
   BOOL success = YES;
   NSString *errorDesc;
   NSString *fileName = [NSString stringWithFormat:@"%@.plist", name];
   NSString *path;
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
-  path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:fileName];
-#else
   NSString *rootPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   path = [rootPath stringByAppendingPathComponent:fileName];
+#else
+  path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:fileName];
 #endif
   NSData *data = [NSPropertyListSerialization dataFromPropertyList:self 
                                                             format:NSPropertyListXMLFormat_v1_0 
@@ -46,7 +54,7 @@
   }
   else 
   {
-    NSLog(@"Error writing plist: %@", errorDesc);
+    NSLog(@"Error serializing dictionary to xml: %@", errorDesc);
     [errorDesc release];
     success = NO;
   }
@@ -64,7 +72,7 @@
 {
 }
 
-+ (NSArray*) write:(NSString*)name
+- (NSArray*) write:(NSString*)name
 {
 
 }
