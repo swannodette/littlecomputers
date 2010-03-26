@@ -1,12 +1,10 @@
 #import "LCImageDownloadQueue.h"
-#import "LCURLConnection.h"
-
+#import "LCURLRequest.h"
 
 @interface LCImageDownloadQueue (private)
 - (void) downloadNextImageInQueue;
 - (void) downloadImage:(NSString*)imageURL;
 @end
-
 
 @implementation LCImageDownloadQueue
 
@@ -16,12 +14,9 @@
 + (LCImageDownloadQueue *) sharedQueue
 {
   static LCImageDownloadQueue *sharedQueue = nil;
-  
-  if(!sharedQueue)
-  {
+  if(!sharedQueue) {
     sharedQueue = [[LCImageDownloadQueue alloc] init];
   }
-  
   return sharedQueue;
 }
 
@@ -31,8 +26,7 @@
 - (id) init
 {
   self = [super init];
-  if (self != nil) 
-  {
+  if (self != nil) {
     isDownloading = NO;    
     queue = [[NSMutableArray alloc] init];
   }
@@ -53,8 +47,7 @@
 
 - (void) downloadNextImageInQueue
 {
-  if(!isDownloading && [queue count] > 0)
-  {
+  if(!isDownloading && [queue count] > 0) {
     NSDictionary *nextImage = [queue objectAtIndex:0];
     [self downloadImage:[nextImage objectForKey:@"url"]];
   }
@@ -64,19 +57,17 @@
 - (void) downloadImage:(NSString*)imageURL
 {
   isDownloading = YES;
-  [[LCURLConnection alloc] initWithURL:imageURL delegate:self];
+  [[LCURLRequest alloc] initWithURL:imageURL delegate:self];
 }
 
 
-- (void) connectionDidFinishLoading:(LCURLConnection*)connection
+- (void) requestDidFinishLoading:(LCURLRequest*)connection
 {
   NSDictionary *downloadRequest = [queue objectAtIndex:0];
   id requester = [downloadRequest objectForKey:@"requester"];
-
-  UIImage *theImage = [connection image];
+  id theImage = [connection image];
   
-  if([requester respondsToSelector:@selector(queueDidLoadImage:)])
-  {
+  if([requester respondsToSelector:@selector(queueDidLoadImage:)]) {
     [requester performSelector:@selector(queueDidLoadImage:) withObject:theImage];
   }
 
@@ -91,14 +82,13 @@
 }
 
 
-- (void) connection:(LCURLConnection*)connection didFailWithError:(NSError*)error
+- (void) request:(LCURLRequest*)connection didFailWithError:(NSError*)error
 {
   NSDictionary *request = [queue objectAtIndex:0];
   id requester = [request objectForKey:@"requester"];
   NSString *url = [request objectForKey:@"url"];
   
-  if([requester respondsToSelector:@selector(queueDidFailToLoadImage:withError:)])
-  {
+  if([requester respondsToSelector:@selector(queueDidFailToLoadImage:withError:)]) {
     [requester performSelector:@selector(queueDidFailToLoadImage:withError:) withObject:url withObject:error];
   }
   
