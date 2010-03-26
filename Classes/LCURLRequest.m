@@ -143,7 +143,7 @@
 #else
 - (NSImage*) image
 {
-  return [[NSImage alloc] initWithData:receivedData];
+  return [[[NSImage alloc] initWithData:receivedData] autorelease];
 }
 #endif
 
