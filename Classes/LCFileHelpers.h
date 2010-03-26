@@ -17,6 +17,9 @@
 
 + (NSArray*) allDocuments;
 + (NSString*) pathToFileInDocuments:(NSString*)fileName;
+
+#ifdef ZLIB_SUPPORT
 + (BOOL) ungzipFile: (NSString *)sourceFilenameString toDestination:(NSString *)destFilenameString;
+#endif
 
 @end
