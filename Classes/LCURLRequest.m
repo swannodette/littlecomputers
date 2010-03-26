@@ -93,7 +93,7 @@
 
 - (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod headers:(NSDictionary*)theHeaders delegate:(id)aDelegate
 {
-  if(self != [super init]) {
+  if(self = [super init]) {
     urlString = [aURL copy];
     method = [aMethod copy];
     headers = [theHeaders retain]; 
@@ -110,27 +110,24 @@
   [receivedData setLength:0];
 }
 
-
 - (void) connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
   [receivedData appendData:data];
 }
 
-
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
   [connection release];
-  if([delegate respondsToSelector:@selector(connection:didFailWithError:)]) {
-    [delegate performSelector:@selector(connection:didFailWithError:) withObject:self withObject:error];
+  if([delegate respondsToSelector:@selector(request:didFailWithError:)]) {
+    [delegate performSelector:@selector(request:didFailWithError:) withObject:self withObject:error];
   }
 }
-
 
 - (void) connectionDidFinishLoading:(NSURLConnection *)connection
 {
   [connection release];
-  if([delegate respondsToSelector:@selector(connectionDidFinishLoading:)]) {
-    [delegate performSelector:@selector(connectionDidFinishLoading:) withObject:self];
+  if([delegate respondsToSelector:@selector(requestDidFinishLoading:)]) {
+    [delegate performSelector:@selector(requestDidFinishLoading:) withObject:self];
   }
 }
 
