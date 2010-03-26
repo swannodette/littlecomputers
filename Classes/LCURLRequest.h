@@ -22,24 +22,22 @@
 - (void) request:(LCURLRequest*)request didFailWithError:(NSError*)error;
 @end
 
-
 @interface NSDictionary ( NSDictionary_URLHelpers )
 - (NSString*) toURLParameters;
 @end
 
-
 @interface LCURLRequest : NSObject 
 {
-  id                  delegate;           // store a reference to the delegate
 @private
+  id                  delegate;           // store a reference to the delegate
   NSString            *method;            // the HTTP method
   NSDictionary        *headers;            // the headers
   NSMutableData       *receivedData;      // internal NSData object
 }
 
-- (id) initWithURL:(NSString*)urlString delegate:(id)delegate;
-- (id) initWithURL:(NSString*)urlString method:(NSString*)method delegate:(id)delegate;
-- (id) initWithURL:(NSString*)urlString method:(NSString*)method headers:(NSDictionary*)headers delegate:(id)delegate;
+- (id) initWithURL:(NSString*)urlString delegate:(id)aDelegate;
+- (id) initWithURL:(NSString*)urlString method:(NSString*)aMethod delegate:(id)aDelegate;
+- (id) initWithURL:(NSString*)urlString method:(NSString*)aMethod headers:(NSDictionary*)theHeaders delegate:(id)aDelegate;
 
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 - (UIImage*) image;

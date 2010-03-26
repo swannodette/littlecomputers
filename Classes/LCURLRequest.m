@@ -81,24 +81,21 @@
 
 #pragma mark Init
 
-- (id) initWithURL:(NSString*)urlString delegate:(id) aDelegate;
+- (id) initWithURL:(NSString*)urlString delegate:(id)aDelegate;
 {
-  self = [super init];
-  if (self != nil)  {
-    [self initWithURL:urlString method:@"GET" headers:nil delegate:delegate];
-  }
-  return self;
+  return [self initWithURL:urlString method:@"GET" headers:nil delegate:aDelegate];
 }
 
-- (id) initWithURL:(NSString*)urlString method:(NSString*)method delegate:(id)delegate
+- (id) initWithURL:(NSString*)urlString method:(NSString*)aMethod delegate:(id)aDelegate
 {
-  
+  return [self initWithURL:urlString method:method headers:nil delegate:delegate];
 }
 
-- (id) initWithURL:(NSString*)urlString method:(NSString*)method headers:(NSDictionary*)headers delegate:(id)delegate
+- (id) initWithURL:(NSString*)urlString method:(NSString*)aMethod headers:(NSDictionary*)theHeaders delegate:(id)aDelegate
 {
-  self = [super init];
-  if(self != nil) {
+  if(self != [super init]) {
+    method = aMethod;
+    headers = theHeaders; 
     delegate = aDelegate;
     [self dataRequest:urlString];
   }
@@ -146,14 +143,14 @@
 #else
 - (NSImage*) image
 {
-  return [NSImage initi
+  return [[NSImage alloc] initWithData:receivedData];
 }
 #endif
 
-
 - (NSString*) response
 {
-  return [NSString stringWithCString:[receivedData bytes] length:[receivedData length]];
+  // might need to add string terminator ? - David
+  return [NSString stringWithCString:[receivedData bytes] encoding:NSUTF8StringEncoding];
 }
 
 #ifdef JSON_SUPPORT
