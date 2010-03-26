@@ -6,7 +6,7 @@
 //  Copyright 2008 New York University. All rights reserved.
 //
 
-#import "LCURLConnection.h"
+#import "LCURLRequest.h"
 
 #ifdef JSON_SUPPORT
 #import "JSON.h"
@@ -15,20 +15,18 @@
 #pragma mark -
 #pragma mark NSDictionary URLHelpers Category
 
-@implementation NSDictionary ( NSDictionary_URLHelpers )
+@implementation NSDictionary (NSDictionary_URLHelpers)
 
 - (NSString*) toURLParameters
 {
   NSMutableString *result = [[[NSMutableString alloc] init] autorelease];
   NSArray *keys = [self allKeys];
   NSInteger count = [keys count];
-  for(int i = 0; i < count; i++)
-  {
+  for(int i = 0; i < count; i++) {
     NSString *key = [keys objectAtIndex:i];
     id value = [self objectForKey:key];
     [result appendFormat:@"%@=%@", key, value];
-    if(i < count-1)
-    {
+    if(i < count-1) {
       [result appendString:@"&"];
     }
   }
@@ -40,34 +38,35 @@
 #pragma mark -
 #pragma mark Private Methods
 
-@interface LCURLConnection (private)
+@interface LCURLRequest (private)
 - (void) dataRequest:(NSString*)urlString;
 @end
 
-@implementation LCURLConnection (private)
+@implementation LCURLRequest (private)
 
 - (void) dataRequest:(NSString*)urlString
 {
   NSString *encodedURLString = [urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
   
   NSURL *encodedURL = [NSURL URLWithString:encodedURLString];
-  NSURLRequest *theRequest = [NSURLRequest requestWithURL:encodedURL
-                                              cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                          timeoutInterval:60.0];
-  
+  NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:encodedURL
+                                                            cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                        timeoutInterval:60.0];
+  [theRequest setHTTPMethod:method];
+  if(headers) {
+    for(NSString *header in headers) {
+      [theRequest setValue:[headers objectForKey:header] forHTTPHeaderField:header];
+    }
+  }
+
   NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
   
-  if(theConnection) 
-  {
-    if(receivedData != nil)
-    {
+  if(theConnection) {
+    if(receivedData != nil) {
       [receivedData release];
     }
-    
     receivedData = [[NSMutableData data] retain];
-  }
-  else
-  {
+  } else {
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"Could not establish connection", NSLocalizedDescriptionKey, nil];
     [self connection:nil didFailWithError:[NSError errorWithDomain:@"LCURLConnection" code:1 userInfo:dict]];
   }
@@ -78,19 +77,29 @@
 #pragma mark -
 #pragma mark Public Methods
 
-@implementation LCURLConnection
-
-@synthesize delegate;
+@implementation LCURLRequest
 
 #pragma mark Init
 
 - (id) initWithURL:(NSString*)urlString delegate:(id) aDelegate;
 {
   self = [super init];
+  if (self != nil)  {
+    [self initWithURL:urlString method:@"GET" headers:nil delegate:delegate];
+  }
+  return self;
+}
+
+- (id) initWithURL:(NSString*)urlString method:(NSString*)method delegate:(id)delegate
+{
   
-  if (self != nil) 
-  {
-    self.delegate = aDelegate;
+}
+
+- (id) initWithURL:(NSString*)urlString method:(NSString*)method headers:(NSDictionary*)headers delegate:(id)delegate
+{
+  self = [super init];
+  if(self != nil) {
+    delegate = aDelegate;
     [self dataRequest:urlString];
   }
   return self;
@@ -113,10 +122,8 @@
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
   [connection release];
-  
-  if([self.delegate respondsToSelector:@selector(connection:didFailWithError:)])
-  {
-    [self.delegate performSelector:@selector(connection:didFailWithError:) withObject:self withObject:error];
+  if([delegate respondsToSelector:@selector(connection:didFailWithError:)]) {
+    [delegate performSelector:@selector(connection:didFailWithError:) withObject:self withObject:error];
   }
 }
 
@@ -124,19 +131,24 @@
 - (void) connectionDidFinishLoading:(NSURLConnection *)connection
 {
   [connection release];
-  
-  if([self.delegate respondsToSelector:@selector(connectionDidFinishLoading:)])
-  {
-    [self.delegate performSelector:@selector(connectionDidFinishLoading:) withObject:self];
+  if([delegate respondsToSelector:@selector(connectionDidFinishLoading:)]) {
+    [delegate performSelector:@selector(connectionDidFinishLoading:) withObject:self];
   }
 }
 
 #pragma mark Data Accessors
 
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 - (UIImage*) image
 {
   return [UIImage imageWithData:receivedData];
 }
+#else
+- (NSImage*) image
+{
+  return [NSImage initi
+}
+#endif
 
 
 - (NSString*) response
@@ -157,7 +169,6 @@
 - (void) dealloc
 {
   [receivedData release];
-  
   [super dealloc];
 }
 

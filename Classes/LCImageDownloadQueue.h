@@ -1,5 +1,10 @@
+#if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 #import <UIKit/UIKit.h>
-#import "LCURLConnection.h"
+#else
+#import <Cocoa/Cocoa.h>
+#endif
+
+#import "LCURLRequest.h"
 
 @class LCImageDownloadQueue;
 
@@ -9,9 +14,11 @@
 - (void) queueDidFailToLoadImage:(NSString*)imageUrl withError:(NSError*)error;
 @end
 
-@interface LCImageDownloadQueue : NSObject <LCURLConnectionDelegate>
+@interface LCImageDownloadQueue : NSObject <LCURLRequestDelegate>
 {
   BOOL                        isDownloading;
+  id                          delegate;
+@private
   NSMutableArray              *queue;
 }
 
