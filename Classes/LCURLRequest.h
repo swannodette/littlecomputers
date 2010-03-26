@@ -30,14 +30,15 @@
 {
 @private
   id                  delegate;           // store a reference to the delegate
+  NSString            *urlString;         // the URL to load
   NSString            *method;            // the HTTP method
-  NSDictionary        *headers;            // the headers
+  NSDictionary        *headers;           // the headers
   NSMutableData       *receivedData;      // internal NSData object
 }
 
-- (id) initWithURL:(NSString*)urlString delegate:(id)aDelegate;
-- (id) initWithURL:(NSString*)urlString method:(NSString*)aMethod delegate:(id)aDelegate;
-- (id) initWithURL:(NSString*)urlString method:(NSString*)aMethod headers:(NSDictionary*)theHeaders delegate:(id)aDelegate;
+- (id) initWithURL:(NSString*)aURL delegate:(id)aDelegate;
+- (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod delegate:(id)aDelegate;
+- (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod headers:(NSDictionary*)theHeaders delegate:(id)aDelegate;
 
 #if TARGET_OS_IPHONE || TARGET_IPHONE_SIMULATOR
 - (UIImage*) image;

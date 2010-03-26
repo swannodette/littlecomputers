@@ -39,14 +39,14 @@
 #pragma mark Private Methods
 
 @interface LCURLRequest (private)
-- (void) dataRequest:(NSString*)urlString;
+- (void) dataRequest:(NSString*)aURL;
 @end
 
 @implementation LCURLRequest (private)
 
-- (void) dataRequest:(NSString*)urlString
+- (void) dataRequest:(NSString*)aURL
 {
-  NSString *encodedURLString = [urlString stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
+  NSString *encodedURLString = [aURL stringByAddingPercentEscapesUsingEncoding:NSASCIIStringEncoding];
   
   NSURL *encodedURL = [NSURL URLWithString:encodedURLString];
   NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:encodedURL
@@ -81,22 +81,23 @@
 
 #pragma mark Init
 
-- (id) initWithURL:(NSString*)urlString delegate:(id)aDelegate;
+- (id) initWithURL:(NSString*)aURL delegate:(id)aDelegate;
 {
-  return [self initWithURL:urlString method:@"GET" headers:nil delegate:aDelegate];
+  return [self initWithURL:aURL method:@"GET" headers:nil delegate:aDelegate];
 }
 
-- (id) initWithURL:(NSString*)urlString method:(NSString*)aMethod delegate:(id)aDelegate
+- (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod delegate:(id)aDelegate
 {
-  return [self initWithURL:urlString method:method headers:nil delegate:delegate];
+  return [self initWithURL:aURL method:method headers:nil delegate:delegate];
 }
 
-- (id) initWithURL:(NSString*)urlString method:(NSString*)aMethod headers:(NSDictionary*)theHeaders delegate:(id)aDelegate
+- (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod headers:(NSDictionary*)theHeaders delegate:(id)aDelegate
 {
   if(self != [super init]) {
-    method = aMethod;
-    headers = theHeaders; 
-    delegate = aDelegate;
+    urlString = [aURL copy];
+    method = [aMethod copy];
+    headers = [theHeaders retain]; 
+    delegate = [aDelegate retain];
     [self dataRequest:urlString];
   }
   return self;
@@ -165,6 +166,12 @@
 
 - (void) dealloc
 {
+  [urlString release];
+  urlString = nil;
+  [method release];
+  method = nil;
+  [headers release];
+  headers = nil;
   [receivedData release];
   [super dealloc];
 }
