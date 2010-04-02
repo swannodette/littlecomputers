@@ -1,4 +1,4 @@
-#import "Categories.h"
+#import "LCCategories.h"
 
 @implementation NSDictionary (LittleComputers)
 
