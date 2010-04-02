@@ -96,12 +96,12 @@
 
 - (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod delegate:(id)aDelegate
 {
-  return [self initWithURL:aURL method:method parameters:nil headers:nil delegate:delegate];
+  return [self initWithURL:aURL method:aMethod parameters:nil headers:nil delegate:aDelegate];
 }
 
 - (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod parameters:(NSDictionary*)theParameters delegate:(id)aDelegate
 {
-  return [self initWithURL:aURL method:method parameters:theParameters headers:nil delegate:delegate];
+  return [self initWithURL:aURL method:aMethod parameters:theParameters headers:nil delegate:aDelegate];
 }
   
 - (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod parameters:(NSDictionary*)theParameters headers:(NSDictionary*)theHeaders delegate:(id)aDelegate
@@ -112,7 +112,12 @@
     parameters = [theParameters retain];
     headers = [theHeaders retain]; 
     delegate = [aDelegate retain];
-    [self dataRequest:urlString];
+    
+    if([method isEqual:@"GET"] && parameters != nil) {
+      [self dataRequest:[NSString stringWithFormat:@"%@%@", urlString, [parameters toURLParameters]]];
+    } else {
+      [self dataRequest:urlString];
+    }
   }
   return self;
 }
