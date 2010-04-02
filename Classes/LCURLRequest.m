@@ -114,7 +114,7 @@
     delegate = [aDelegate retain];
     
     if([method isEqual:@"GET"] && parameters != nil) {
-      [self dataRequest:[NSString stringWithFormat:@"%@%@", urlString, [parameters toURLParameters]]];
+      [self dataRequest:[NSString stringWithFormat:@"%@?%@", urlString, [parameters toURLParameters]]];
     } else {
       [self dataRequest:urlString];
     }
