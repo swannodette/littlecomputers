@@ -179,6 +179,8 @@
 {
   [urlString release];
   urlString = nil;
+  [parameters release];
+  parameters = nil;
   [method release];
   method = nil;
   [headers release];
