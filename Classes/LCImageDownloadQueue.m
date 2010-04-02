@@ -75,8 +75,7 @@
   [connection release];
   
   isDownloading = NO;
-  if([queue count] > 0)
-  {
+  if([queue count] > 0) {
     [self downloadNextImageInQueue];
   }
 }

@@ -30,15 +30,13 @@
   unsigned char out[CHUNK_SIZE];
   
   gzFile theFile = gzopen(sourceFilename, "rb");
-  if(theFile == NULL)
-  {
+  if(theFile == NULL) {
     NSLog(@"error opening gz file");
     return NO;
   }
   
   FILE *outFile = fopen(destFilename, "wb");
-  if(outFile == NULL)
-  {
+  if(outFile == NULL) {
     NSLog(@"error opening destination file");
     return NO;
   }
@@ -46,11 +44,9 @@
   long totalBytes = 0;
   int readResult = 0;
   
-  do 
-  {
+  do {
     readResult = gzread(theFile, out, CHUNK_SIZE);
-    if(readResult > 0)
-    {
+    if(readResult > 0) {
       fwrite(out, 1, readResult, outFile);
       totalBytes += readResult;
     }
@@ -59,13 +55,10 @@
   gzclose(theFile);
   fclose(outFile);
   
-  if(readResult == 0)
-  {
+  if(readResult == 0) {
     NSLog(@"successfully uncompressed gz file, resulting file is %d bytes", totalBytes);
     return YES;
-  }
-  else
-  {
+  } else {
     NSLog(@"error reading data from gz file");
     return NO;
   }

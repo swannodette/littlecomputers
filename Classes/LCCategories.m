@@ -20,12 +20,9 @@
 #else
   path = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
 #endif
-  if(path)
-  {
+  if(path) {
     return [NSDictionary dictionaryWithContentsOfFile:path];  
-  }
-  else 
-  {
+  } else {
     NSLog(@"NSDictionary could not read %@", fileName);
     return nil;
   }
@@ -46,14 +43,11 @@
   NSData *data = [NSPropertyListSerialization dataFromPropertyList:self 
                                                             format:NSPropertyListXMLFormat_v1_0 
                                                   errorDescription:&errorDesc];
-  if(data)
-  {
+  if(data) {
     NSError *error;
     success = [data writeToFile:path options:NSAtomicWrite error:&error];
     if(!success) NSLog(@"Error writing NSDictionary to plist: %@", error);
-  }
-  else 
-  {
+  } else {
     NSLog(@"Error serializing NSDictionary to xml: %@", errorDesc);
     [errorDesc release];
     success = NO;
@@ -75,19 +69,15 @@
   NSString *rootPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
   path = [rootPath stringByAppendingPathComponent:fileName];
   // SEE NSDictionary +read
-  if (![[NSFileManager defaultManager] fileExistsAtPath:path]) 
-  {
+  if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
     path = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
   }
 #else
   path = [[NSBundle mainBundle] pathForResource:name ofType:@"plist"];
 #endif
-  if(path)
-  {
+  if(path) {
     return [NSArray arrayWithContentsOfFile:path];  
-  }
-  else 
-  {
+  } else {
     NSLog(@"NSArray could not read %@", fileName);
     return nil;
   }
@@ -109,14 +99,11 @@
   NSData *data = [NSPropertyListSerialization dataFromPropertyList:self 
                                                             format:NSPropertyListXMLFormat_v1_0 
                                                   errorDescription:&errorDesc];
-  if(data)
-  {
+  if(data) {
     NSError *error;
     success = [data writeToFile:path options:NSAtomicWrite error:&error];
     if(!success) NSLog(@"Error writing NSArray to plist: %@", error);
-  }
-  else 
-  {
+  } else {
     NSLog(@"Error serializing NSArray to xml: %@", errorDesc);
     [errorDesc release];
     success = NO;
