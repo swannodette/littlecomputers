@@ -1,5 +1,13 @@
 #import "LCCategories.h"
 
+@implementation NSString (LittleComputers)
++ (NSString*) template:(NSDictionary*)aDict
+{
+  
+}
+@end
+
+
 @implementation NSDictionary (LittleComputers)
 
 + (NSDictionary*) read:(NSString*)name
