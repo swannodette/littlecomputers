@@ -83,19 +83,25 @@
 
 - (id) initWithURL:(NSString*)aURL delegate:(id)aDelegate;
 {
-  return [self initWithURL:aURL method:@"GET" headers:nil delegate:aDelegate];
+  return [self initWithURL:aURL method:@"GET" parameters:nil headers:nil delegate:aDelegate];
 }
 
 - (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod delegate:(id)aDelegate
 {
-  return [self initWithURL:aURL method:method headers:nil delegate:delegate];
+  return [self initWithURL:aURL method:method parameters:nil headers:nil delegate:delegate];
 }
 
-- (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod headers:(NSDictionary*)theHeaders delegate:(id)aDelegate
+- (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod parameters:(NSDictionary*)theParameters delegate:(id)aDelegate
+{
+  return [self initWithURL:aURL method:method parameters:theParameters headers:nil delegate:delegate];
+}
+
+- (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod parameters:(NSDictionary*)theParameters headers:(NSDictionary*)theHeaders delegate:(id)aDelegate
 {
   if(self = [super init]) {
     urlString = [aURL copy];
     method = [aMethod copy];
+    parameters = [theParameters retain];
     headers = [theHeaders retain]; 
     delegate = [aDelegate retain];
     [self dataRequest:urlString];
