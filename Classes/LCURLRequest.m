@@ -53,12 +53,20 @@
                                                             cachePolicy:NSURLRequestUseProtocolCachePolicy
                                                         timeoutInterval:60.0];
   [theRequest setHTTPMethod:method];
+  
+  if ([method isEqual:@"POST"] && parameters != nil) {
+    NSData *postData = [[parameters toURLParameters] dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+    [theRequest setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
+    [theRequest setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Current-Type"];
+    [theRequest setHTTPBody:postData];
+  }
+  
   if(headers) {
     for(NSString *header in headers) {
       [theRequest setValue:[headers objectForKey:header] forHTTPHeaderField:header];
     }
   }
-
+  
   NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
   
   if(theConnection) {
@@ -95,12 +103,12 @@
 {
   return [self initWithURL:aURL method:method parameters:theParameters headers:nil delegate:delegate];
 }
-
+  
 - (id) initWithURL:(NSString*)aURL method:(NSString*)aMethod parameters:(NSDictionary*)theParameters headers:(NSDictionary*)theHeaders delegate:(id)aDelegate
 {
   if(self = [super init]) {
     urlString = [aURL copy];
-    method = [aMethod copy];
+    method = [[aMethod uppercaseString] retain];
     parameters = [theParameters retain];
     headers = [theHeaders retain]; 
     delegate = [aDelegate retain];
