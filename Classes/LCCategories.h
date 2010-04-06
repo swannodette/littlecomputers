@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
 @interface NSString (LittleComputers)
-+ (NSString*) template:(NSDictionary*)aDict;
+- (NSString*) template:(NSDictionary*)aDict;
 @end
 
 @interface NSDictionary (LittleComputers)

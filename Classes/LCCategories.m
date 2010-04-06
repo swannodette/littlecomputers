@@ -1,9 +1,24 @@
 #import "LCCategories.h"
 
-@implementation NSString (LittleComputers)
-+ (NSString*) template:(NSDictionary*)aDict
+@implementation NSMutableString (LittleComputers)
+- (NSString*) template:(NSDictionary*)aDict
 {
-  
+  NSMutableString *mutableCopy = [NSMutableString stringWithString:self];
+  for (NSString *key in aDict) {
+    int len = [mutableCopy length];
+    id value = [aDict objectForKey:key];
+    if([value isKindOfClass:[NSNumber class]]) {
+      value = [value stringValue];
+    } else if (![value isKindOfClass:[NSString class]]) {
+      continue;
+    }
+    [mutableCopy replaceOccurrencesOfString:[NSString stringWithFormat:@"{%@}",key] 
+                                 withString:value
+                                    options:NSLiteralSearch
+                                      range:NSMakeRange(0, len)];
+  }
+  NSLog(@"done!");
+  return mutableCopy;
 }
 @end
 
